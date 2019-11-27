@@ -94,6 +94,7 @@ class _LoginCardState extends State<LoginCard> {
                     BlocListener<LoginBloc, LoginState>(
                       listener: (BuildContext context, LoginState state) {
                         if (state is LoginLoaded) {
+                          successLogin(state.authenticateResponse.access_token);
                           // TODO: save to shared pref? redux?
                           // then trigger an event? that makes the router check if sharedPref access_token is available, if yes, replace route to dashboard
                         } else if (state is LoginError) {
@@ -151,7 +152,7 @@ class _LoginCardState extends State<LoginCard> {
     //   context,
     //   ProfileRoute,
     // );
-    Navigator.pushNamed(context, ProfileRoute);
+    // Navigator.pushNamed(context, ProfileRoute);
     final username = _usernameController.text;
     final password = _passwordController.text;
 
@@ -160,13 +161,26 @@ class _LoginCardState extends State<LoginCard> {
 
   void getAccessTokenFromPrefs() async {
     await Prefs.accessToken.then((value) {
-      print(
-        'Access Token: "${value}"',
-      );
+      print('Access Token: "${value}"');
+      if (value != null && value != '') {
+        Navigator.pushReplacementNamed(
+          context,
+          ProfileRoute,
+        );
+      }
     });
   }
 
-  void setAccessTokenToPrefs(v) async{
+  void setAccessTokenToPrefs(v) async {
+    print('>>>>set Access Token: "${v}"');
     await Prefs.setAccessToken(v);
+  }
+
+  void successLogin(v) {
+    setAccessTokenToPrefs(v);
+    Navigator.pushReplacementNamed(
+      context,
+      ProfileRoute,
+    );
   }
 }

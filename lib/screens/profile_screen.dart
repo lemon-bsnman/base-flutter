@@ -1,4 +1,7 @@
+import 'package:base_app/prefs/preferences.dart';
 import 'package:flutter/material.dart';
+
+import '../routes.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -72,12 +75,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     ProfileHolder(Section2()),
+                    RaisedButton(
+                      child: Text("Logout"),
+                      onPressed: logout,
+                    )
                   ]),
             ),
           ),
         ),
       ),
     );
+  }
+
+  logout() {
+    setAccessTokenToPrefs('');
+    Navigator.pushReplacementNamed(
+      context,
+      LoginRoute,
+    );
+  }
+
+  void setAccessTokenToPrefs(v) async {
+    print('>>>>set Access Token: "${v}"');
+    await Prefs.setAccessToken(v);
   }
 }
 
