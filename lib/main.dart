@@ -1,19 +1,34 @@
 import 'package:base_app/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:base_app/model/app_state.dart';
+import 'package:base_app/redux/reducers.dart';
+import 'package:base_app/redux/actions.dart';
+import 'package:redux/redux.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  final _initialState = AppState(profileName: '');
+  Store<AppState> _store = Store<AppState>(reducer, initialState: _initialState);
+  runApp(MyApp(store:_store));
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final Store<AppState> store;
+
+  MyApp({this.store});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        accentColor: Colors.amber,
-        primaryColor:
-            Color(int.parse("FF9C04".substring(0, 6), radix: 16) + 0xFF000000),
+    return StoreProvider<AppState>(
+      store: store,
+      child: MaterialApp(
+        theme: ThemeData(
+          accentColor: Colors.amber,
+          primaryColor:
+              Color(int.parse("FF9C04".substring(0, 6), radix: 16) + 0xFF000000),
+        ),
+        onGenerateRoute: Routes.routes(),
       ),
-      onGenerateRoute: Routes.routes(),
     );
   }
 }
