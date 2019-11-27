@@ -15,19 +15,22 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Color(0xFFFF9C04),
       body: SafeArea(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: BlocProvider(
-                  builder: (context) => LoginBloc(
-                    APILoginRepository(),
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(top: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: BlocProvider(
+                    builder: (context) => LoginBloc(
+                      APILoginRepository(),
+                    ),
+                    child: LoginCard(),
                   ),
-                  child: LoginCard(),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

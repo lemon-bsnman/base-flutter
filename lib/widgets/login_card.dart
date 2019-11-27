@@ -1,6 +1,7 @@
 import 'package:base_app/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:base_app/routes.dart';
 
 class LoginCard extends StatefulWidget {
   @override
@@ -132,7 +133,11 @@ class _LoginCardState extends State<LoginCard> {
 
   void onLogin(BuildContext context) {
     final loginBloc = BlocProvider.of<LoginBloc>(context);
-
+    // Navigator.pushReplacementNamed(
+    //   context,
+    //   ProfileRoute,
+    // );
+    Navigator.pushNamed(context, ProfileRoute);
     final username = _usernameController.text;
     final password = _usernameController.text;
 
