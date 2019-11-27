@@ -2,6 +2,7 @@ import 'package:base_app/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:base_app/routes.dart';
+import 'package:base_app/prefs/preferences.dart';
 
 class LoginCard extends StatefulWidget {
   @override
@@ -13,6 +14,12 @@ class _LoginCardState extends State<LoginCard> {
 
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getAccessTokenFromPrefs();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,5 +156,17 @@ class _LoginCardState extends State<LoginCard> {
     final password = _passwordController.text;
 
     loginBloc.add(SendLogin(username, password));
+  }
+
+  void getAccessTokenFromPrefs() async {
+    await Prefs.accessToken.then((value) {
+      print(
+        'Access Token: "${value}"',
+      );
+    });
+  }
+
+  void setAccessTokenToPrefs(v) async{
+    await Prefs.setAccessToken(v);
   }
 }
