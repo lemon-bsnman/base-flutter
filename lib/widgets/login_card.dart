@@ -1,4 +1,6 @@
+import 'package:base_app/bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginCard extends StatefulWidget {
   @override
@@ -8,15 +10,24 @@ class LoginCard extends StatefulWidget {
 class _LoginCardState extends State<LoginCard> {
   static final Key _formKey = Key("LoginCardKey");
 
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16),
-      child: buildInitial(context),
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (BuildContext context, LoginState state) {
+          return buildInitial(context);
+        },
+      ),
     );
   }
 
   Widget buildInitial(BuildContext context) {
+    Widget accessToken = Text("no token");
+
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -40,6 +51,7 @@ class _LoginCardState extends State<LoginCard> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        controller: _usernameController,
                         decoration: InputDecoration(
                           hintText: "Username",
                           contentPadding: EdgeInsets.symmetric(
@@ -53,6 +65,7 @@ class _LoginCardState extends State<LoginCard> {
                         height: 16,
                       ),
                       TextFormField(
+                        controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: "Password",
@@ -70,17 +83,43 @@ class _LoginCardState extends State<LoginCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    RaisedButton(
-                      color: Color(0xFFFAAD14),
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
+                    BlocListener<LoginBloc, LoginState>(
+                      listener: (BuildContext context, LoginState state) {
+                        if (state is LoginLoaded) {
+                          // TODO: save to shared pref? redux?
+                          // then trigger an event? that makes the router check if sharedPref access_token is available, if yes, replace route to dashboard
+                        }
+                      },
+                      child: BlocBuilder<LoginBloc, LoginState>(
+                        builder: (BuildContext context, LoginState state) {
+                          if (state is LoginLoading) {
+                            return RaisedButton(
+                              color: Color(0xFFFAAD14),
+                              child: CircularProgressIndicator(),
+                              onPressed: null,
+                            );
+                          } else if (state is LoginLoaded) {
+                            return RaisedButton(
+                              color: Color(0xFFFAAD14),
+                              child:
+                                  Text(state.authenticateResponse.access_token),
+                              onPressed: null,
+                            );
+                          }
+                          return RaisedButton(
+                            color: Color(0xFFFAAD14),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            onPressed: () => onLogin(context),
+                          );
+                        },
                       ),
-                      onPressed: () => onLogin(context),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -91,5 +130,12 @@ class _LoginCardState extends State<LoginCard> {
     );
   }
 
-  void onLogin(BuildContext context) {}
+  void onLogin(BuildContext context) {
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
+
+    final username = _usernameController.text;
+    final password = _usernameController.text;
+
+    loginBloc.add(SendLogin(username, password));
+  }
 }
