@@ -89,6 +89,13 @@ class _LoginCardState extends State<LoginCard> {
                         if (state is LoginLoaded) {
                           // TODO: save to shared pref? redux?
                           // then trigger an event? that makes the router check if sharedPref access_token is available, if yes, replace route to dashboard
+                        } else if (state is LoginError) {
+                          final message = state.message;
+
+                          final snackBar = SnackBar(content: Text(message));
+
+                          // Find the Scaffold in the widget tree and use it to show a SnackBar.
+                          Scaffold.of(context).showSnackBar(snackBar);
                         }
                       },
                       child: BlocBuilder<LoginBloc, LoginState>(
@@ -139,7 +146,7 @@ class _LoginCardState extends State<LoginCard> {
     // );
     Navigator.pushNamed(context, ProfileRoute);
     final username = _usernameController.text;
-    final password = _usernameController.text;
+    final password = _passwordController.text;
 
     loginBloc.add(SendLogin(username, password));
   }
