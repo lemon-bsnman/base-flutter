@@ -1,17 +1,16 @@
-import 'package:base_app/api/model/response/authenticate_response.dart';
+import 'package:base_app/api/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer' as developer;
 
 abstract class LoginRepository {
-  Future<AuthenticateResponse> authenticate(String username, String password);
+  Future<Authenticate> authenticate(String username, String password);
 }
 
 class FakeLoginRepository implements LoginRepository {
   @override
-  Future<AuthenticateResponse> authenticate(String username, password) {
-    final response =
-        AuthenticateResponse.fromJson("{\"access_token\": \"123\"}");
+  Future<Authenticate> authenticate(String username, password) {
+    final response = Authenticate.fromJson("{\"access_token\": \"123\"}");
 
     return Future.delayed(Duration(seconds: 1), () {
       return response;
@@ -21,7 +20,7 @@ class FakeLoginRepository implements LoginRepository {
 
 class APILoginRepository implements LoginRepository {
   @override
-  Future<AuthenticateResponse> authenticate(String username, password) async {
+  Future<Authenticate> authenticate(String username, password) async {
     debugPrint(username);
     debugPrint(password);
     debugPrint("magic");
@@ -41,14 +40,13 @@ class APILoginRepository implements LoginRepository {
       );
 
       if (response.statusCode == 200) {
-        final authenticateResponse =
-            AuthenticateResponse.fromJson(response.body);
+        final authenticate = Authenticate.fromJson(response.body);
 
-        if (authenticateResponse.access_token == null) {
+        if (authenticate.accessToken == null) {
           throw NetworkError();
         }
 
-        return authenticateResponse;
+        return authenticate;
       }
       return null;
     } on Error catch (err) {
