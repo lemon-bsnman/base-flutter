@@ -117,8 +117,7 @@ class _LoginCardState extends State<LoginCard> {
                           } else if (state is LoginLoaded) {
                             return RaisedButton(
                               color: Color(0xFFFAAD14),
-                              child:
-                                  Text(state.authenticateResponse.access_token),
+                              child: Text(state.authenticate.accessToken),
                               onPressed: null,
                             );
                           }
