@@ -75,4 +75,4 @@
 
 
 # built_value generated serializer
-**/*.g.dart
+**/**/*.g.dart
