@@ -94,7 +94,7 @@ class _LoginCardState extends State<LoginCard> {
                     BlocListener<LoginBloc, LoginState>(
                       listener: (BuildContext context, LoginState state) {
                         if (state is LoginLoaded) {
-                          successLogin(state.authenticateResponse.access_token);
+                          successLogin(state.authenticate.accessToken;
                           // TODO: save to shared pref? redux?
                           // then trigger an event? that makes the router check if sharedPref access_token is available, if yes, replace route to dashboard
                         } else if (state is LoginError) {
