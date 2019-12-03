@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:base_app/api/repository/login_repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import './bloc.dart';
 import 'dart:developer' as developer;
 
@@ -21,14 +20,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     if (event is SendLogin) {
       try {
-        final authenticateResponse =
+        final authenticate =
             await _loginRepository.authenticate(event.username, event.password);
 
-        if (authenticateResponse == null ||
-            authenticateResponse.access_token == null) {
+        if (authenticate == null || authenticate.accessToken == null) {
           yield LoginError("Invalid Credentials");
         } else {
-          yield LoginLoaded(authenticateResponse);
+          yield LoginLoaded(authenticate);
         }
       } on NetworkError {
         yield LoginError("Invalid Credentials");

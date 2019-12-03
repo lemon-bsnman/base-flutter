@@ -1,17 +1,24 @@
-import 'package:base_app/api/model/response/authenticate_response.dart';
+import 'package:base_app/api/api.dart';
+import 'package:base_app/api/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
 
 abstract class LoginRepository {
-  Future<AuthenticateResponse> authenticate(String username, String password);
+  MyAPI _api;
+
+  Future<Authenticate> authenticate(String username, String password);
 }
 
 class FakeLoginRepository implements LoginRepository {
+  MyAPI _api;
+
+  FakeLoginRepository._();
+
+  FakeLoginRepository(this._api);
+
   @override
-  Future<AuthenticateResponse> authenticate(String username, password) {
-    final response =
-        AuthenticateResponse.fromJson("{\"access_token\": \"123\"}");
+  Future<Authenticate> authenticate(String username, password) {
+    final response = Authenticate.fromJson("{\"access_token\": \"123\"}");
 
     return Future.delayed(Duration(seconds: 1), () {
       return response;
@@ -20,35 +27,29 @@ class FakeLoginRepository implements LoginRepository {
 }
 
 class APILoginRepository implements LoginRepository {
+  MyAPI _api;
+
+  APILoginRepository._();
+
+  APILoginRepository(this._api);
+
   @override
-  Future<AuthenticateResponse> authenticate(String username, password) async {
+  Future<Authenticate> authenticate(String username, password) async {
     debugPrint(username);
     debugPrint(password);
     debugPrint("magic");
 
     try {
-      final response = await http.post(
-        "https://authorization.optxdev.com/connect/token",
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-        body: {
-          'grant_type': 'password',
-          'username': username,
-          'password': password,
-          'scope': 'openid api_full api.catalog_full',
-          'client_id': '3D3N3YWLKM',
-          'client_secret': ''
-        },
-      );
+      final response = await _api.authService.authenticate(username, password);
 
       if (response.statusCode == 200) {
-        final authenticateResponse =
-            AuthenticateResponse.fromJson(response.body);
+        final authenticate = Authenticate.fromJson(response.body);
 
-        if (authenticateResponse.access_token == null) {
+        if (authenticate.accessToken == null) {
           throw NetworkError();
         }
 
-        return authenticateResponse;
+        return authenticate;
       }
       return null;
     } on Error catch (err) {

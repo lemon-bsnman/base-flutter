@@ -1,3 +1,4 @@
+import 'package:base_app/api/api.dart';
 import 'package:base_app/api/repository/login_repository.dart';
 import 'package:base_app/bloc/bloc.dart';
 import 'package:base_app/widgets/login_card.dart';
@@ -21,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // setProfileName("Sample Name2");
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, state) {
@@ -37,15 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Center(
                         child: BlocProvider(
                           builder: (context) => LoginBloc(
-                            APILoginRepository(),
+                            APILoginRepository(MyAPI.api),
                           ),
                           child: Column(
                             children: <Widget>[
-                              // RaisedButton(
-                              //   onPressed: () => setProfileName('Another Sample Name'),
-                              //   child: Text('Sample'),
-                              // ),
-                              // Text(state.profileName),
                               LoginCard(),
                             ],
                           ),

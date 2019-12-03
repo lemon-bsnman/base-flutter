@@ -1,4 +1,4 @@
-import 'package:base_app/api/model/response/authenticate_response.dart';
+import 'package:base_app/api/model/model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class LoginState extends Equatable {
@@ -18,12 +18,12 @@ class LoginLoading extends LoginState {
 }
 
 class LoginLoaded extends LoginState {
-  final AuthenticateResponse authenticateResponse;
+  final Authenticate authenticate;
 
-  const LoginLoaded(this.authenticateResponse);
+  const LoginLoaded(this.authenticate);
 
   @override
-  List<Object> get props => [authenticateResponse];
+  List<Object> get props => [authenticate];
 }
 
 class LoginError extends LoginState {
