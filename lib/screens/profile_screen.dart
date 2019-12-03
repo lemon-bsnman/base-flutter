@@ -274,29 +274,64 @@ class Section2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              titleLabel("Lead Profile"),
-              Spacer(),
-              Icon(
-                Icons.edit,
-                color: Colors.grey,
-                size: 24.0,
-              ),
-            ],
-          ),
-          textLabel('Display Name'),
-          textLabelResult('Jeff Jordan'),
-          textLabel('Status'),
-          textLabelResult('Active'),
-          textLabel('Business Classification'),
-          textLabelResult('Manufacturing'),
-        ],
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState state) {
+          if (state is UserInitial) {
+            return CircularProgressIndicator();
+          } else if (state is UserLoading) {
+            return CircularProgressIndicator();
+          } else if (state is UserLoaded) {
+            final user = state.user;
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    titleLabel("Lead Profile"),
+                    Spacer(),
+                    Icon(
+                      Icons.edit,
+                      color: Colors.grey,
+                      size: 24.0,
+                    ),
+                  ],
+                ),
+                textLabel("Display Name"),
+                textLabelResult(user.simplifiedName),
+                textLabel('Role'),
+                textLabelResult(user.role),
+                textLabel('Employee Id'),
+                textLabelResult(user.employeeId),
+              ],
+            );
+          }
+        },
       ),
+      // child: Column(
+      //   mainAxisAlignment: MainAxisAlignment.start,
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: <Widget>[
+      //     Row(
+      //       children: <Widget>[
+      //         titleLabel("Lead Profile"),
+      //         Spacer(),
+      //         Icon(
+      //           Icons.edit,
+      //           color: Colors.grey,
+      //           size: 24.0,
+      //         ),
+      //       ],
+      //     ),
+      //     textLabel('Display Name'),
+      //     textLabelResult('Jeff Jordan'),
+      //     textLabel('Status'),
+      //     textLabelResult('Active'),
+      //     textLabel('Business Classification'),
+      //     textLabelResult('Manufacturing'),
+      //   ],
+      // ),
     );
   }
 }
