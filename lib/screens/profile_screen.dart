@@ -37,7 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    fetchUser(context);
+
     return WillPopScope(
       onWillPop: showPop,
       child: Scaffold(
@@ -58,37 +66,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: BlocProvider(
-              builder: (context) => UserBloc(
-                APIUserRepository(MyAPI.api),
-              ),
-              child: Container(
-                width: double.infinity,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ProfileImage(),
-                      ProfileDetails(),
-                      ProfileHolder(
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            ContactButton(Icons.call, "Mobile"),
-                            ContactButton(Icons.chat, "iM"),
-                            ContactButton(Icons.email, "Email"),
-                            ContactButton(Icons.web, "Web"),
-                            ContactButton(Icons.link, "LinkedIn"),
-                          ],
-                        ),
+            child: Container(
+              width: double.infinity,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ProfileImage(),
+                    ProfileDetails(),
+                    ProfileHolder(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          ContactButton(Icons.call, "Mobile"),
+                          ContactButton(Icons.chat, "iM"),
+                          ContactButton(Icons.email, "Email"),
+                          ContactButton(Icons.web, "Web"),
+                          ContactButton(Icons.link, "LinkedIn"),
+                        ],
                       ),
-                      ProfileHolder(Section2()),
-                      RaisedButton(
-                        child: Text("Logout"),
-                        onPressed: logout,
-                      )
-                    ]),
-              ),
+                    ),
+                    ProfileHolder(Section2()),
+                    RaisedButton(
+                      child: Text("Logout"),
+                      onPressed: logout,
+                    )
+                  ]),
             ),
           ),
         ),
@@ -107,6 +110,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void setAccessTokenToPrefs(v) async {
     print('>>>>set Access Token: "${v}"');
     await Prefs.setAccessToken(v);
+  }
+
+  void fetchUser(BuildContext context) {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+
+    // loginBloc.add(SendLogin(username, password));
+    userBloc.add(GetCurrentUser());
   }
 }
 
@@ -183,7 +193,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       ),
                 ),
                 Text(
-                  user.id,
+                  user.role,
                   textAlign: TextAlign.center,
                 ),
                 // Text('Member since: Invalid date', textAlign: TextAlign.left),

@@ -1,4 +1,5 @@
 import 'package:base_app/prefs/preferences.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -14,7 +15,9 @@ class UserService extends UserServiceUserCase {
   @override
   Future<Response> me() async {
     final accessToken = await Prefs.accessToken;
-    return _client.post("https://api.optxdev.com/me",
+
+    debugPrint("accessToken $accessToken");
+    return _client.get("https://api.optxdev.com/me",
         headers: {"Authorization": "Bearer $accessToken"});
   }
 }

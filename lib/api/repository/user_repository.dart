@@ -22,6 +22,9 @@ class APIUserRepository implements UserRepository {
   Future<User> me() async {
     final result = await _api.userService.me();
 
+    debugPrint(result.statusCode.toString());
+    debugPrint(result.body);
+
     if (result.statusCode == 200) {
       final user = User.fromJson(result.body);
 

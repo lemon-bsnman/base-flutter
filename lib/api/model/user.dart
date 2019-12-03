@@ -10,9 +10,7 @@ import 'package:built_value/serializer.dart';
 part 'user.g.dart';
 
 abstract class User implements Built<User, UserBuilder> {
-  @BuiltValueField(wireName: "department_id")
   int get departmentId;
-
   String get email;
   String get employeeId;
   String get firstName;
