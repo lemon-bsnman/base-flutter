@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 abstract class API {
   http.Client client;
   AuthService authService;
+  UserService userService;
 }
 
 class MyAPI implements API {
@@ -13,10 +14,12 @@ class MyAPI implements API {
 
   http.Client client;
   AuthService authService;
+  UserService userService;
 
   MyAPI(http.Client client) {
     this.client = client;
 
     this.authService = AuthService(client);
+    this.userService = UserService(client);
   }
 }

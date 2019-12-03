@@ -1,5 +1,9 @@
+import 'package:base_app/api/api.dart';
+import 'package:base_app/api/repository/user_repository.dart';
+import 'package:base_app/bloc/bloc.dart';
 import 'package:base_app/prefs/preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../routes.dart';
 
@@ -54,32 +58,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: double.infinity,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ProfileImage(),
-                    ProfileDetails(),
-                    ProfileHolder(
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          ContactButton(Icons.call, "Mobile"),
-                          ContactButton(Icons.chat, "iM"),
-                          ContactButton(Icons.email, "Email"),
-                          ContactButton(Icons.web, "Web"),
-                          ContactButton(Icons.link, "LinkedIn"),
-                        ],
+            child: BlocProvider(
+              builder: (context) => UserBloc(
+                APIUserRepository(MyAPI.api),
+              ),
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ProfileImage(),
+                      ProfileDetails(),
+                      ProfileHolder(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            ContactButton(Icons.call, "Mobile"),
+                            ContactButton(Icons.chat, "iM"),
+                            ContactButton(Icons.email, "Email"),
+                            ContactButton(Icons.web, "Web"),
+                            ContactButton(Icons.link, "LinkedIn"),
+                          ],
+                        ),
                       ),
-                    ),
-                    ProfileHolder(Section2()),
-                    RaisedButton(
-                      child: Text("Logout"),
-                      onPressed: logout,
-                    )
-                  ]),
+                      ProfileHolder(Section2()),
+                      RaisedButton(
+                        child: Text("Logout"),
+                        onPressed: logout,
+                      )
+                    ]),
+              ),
             ),
           ),
         ),
@@ -153,24 +162,57 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Jeff Jordan',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16
-                // backgroundColor: Colors.red
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState state) {
+          if (state is UserLoading) {
+            return CircularProgressIndicator();
+          } else if (state is UserLoaded) {
+            final user = state.user;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  user.simplifiedName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 16
+                      // backgroundColor: Colors.red
+                      ),
                 ),
-          ),
-          Text(
-            'PromoMax',
-            textAlign: TextAlign.center,
-          ),
-          // Text('Member since: Invalid date', textAlign: TextAlign.left),
-          // Text('Market: Out of Town', textAlign: TextAlign.left)
-        ],
+                Text(
+                  user.id,
+                  textAlign: TextAlign.center,
+                ),
+                // Text('Member since: Invalid date', textAlign: TextAlign.left),
+                // Text('Market: Out of Town', textAlign: TextAlign.left)
+              ],
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Max Jordan",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 16
+                    // backgroundColor: Colors.red
+                    ),
+              ),
+              Text(
+                "PromoMax",
+                textAlign: TextAlign.center,
+              ),
+              // Text('Member since: Invalid date', textAlign: TextAlign.left),
+              // Text('Market: Out of Town', textAlign: TextAlign.left)
+            ],
+          );
+        },
       ),
     );
   }
