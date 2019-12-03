@@ -37,7 +37,6 @@ class APILoginRepository implements LoginRepository {
   Future<Authenticate> authenticate(String username, password) async {
     debugPrint(username);
     debugPrint(password);
-    debugPrint("magic");
 
     try {
       final response = await _api.authService.authenticate(username, password);
@@ -54,6 +53,8 @@ class APILoginRepository implements LoginRepository {
       return null;
     } on Error catch (err) {
       debugPrint(err.toString());
+    } catch (e) {
+      debugPrint("error on login $e");
     }
     throw NetworkError();
   }
