@@ -1,5 +1,7 @@
+import 'package:base_app/model/app_state.dart';
 import 'package:base_app/prefs/preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import '../routes.dart';
 
@@ -157,7 +159,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Jeff Jordan',
+            StoreProvider.of<AppState>(context).state.profileName,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16

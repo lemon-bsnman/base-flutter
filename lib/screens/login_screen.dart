@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setProfileName("Sample Name2");
+    // setProfileName("Sample Name2");
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, state) {
@@ -41,11 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Column(
                             children: <Widget>[
-                              RaisedButton(
-                                onPressed: () => setProfileName('Another Sample Name'),
-                                child: Text('Sample'),
-                              ),
-                              Text(state.profileName),
+                              // RaisedButton(
+                              //   onPressed: () => setProfileName('Another Sample Name'),
+                              //   child: Text('Sample'),
+                              // ),
+                              // Text(state.profileName),
                               LoginCard(),
                             ],
                           ),

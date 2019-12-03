@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:base_app/routes.dart';
 import 'package:base_app/prefs/preferences.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:base_app/model/app_state.dart';
+import 'package:base_app/redux/actions.dart';
 
 class LoginCard extends StatefulWidget {
   @override
@@ -95,6 +98,7 @@ class _LoginCardState extends State<LoginCard> {
                       listener: (BuildContext context, LoginState state) {
                         if (state is LoginLoaded) {
                           successLogin(state.authenticateResponse.access_token);
+                          setProfileName(_usernameController.text);
                           // TODO: save to shared pref? redux?
                           // then trigger an event? that makes the router check if sharedPref access_token is available, if yes, replace route to dashboard
                         } else if (state is LoginError) {
@@ -182,5 +186,9 @@ class _LoginCardState extends State<LoginCard> {
       context,
       ProfileRoute,
     );
+  }
+
+  void setProfileName(v) {
+    StoreProvider.of<AppState>(context).dispatch(ProfileName(v));
   }
 }
